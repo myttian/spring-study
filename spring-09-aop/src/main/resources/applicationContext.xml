@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--注册bean-->
+    <bean id="userService" class="com.kuang.service.UserServiceImpl"/>
+    <bean id="log" class="com.kuang.log.Log"/>
+    <bean id="afterLog" class="com.kuang.log.AfterLog"/>
+    <!--方式一：使用原生Spring API接口-->
+    <!--aop的配置:需要导入aop的约束-->
+    <aop:config>
+        <!--切入点,匹配要执行的方法;  expression:表达式,execution(要执行的位置, 修饰词、返回值、类名、方法名、参数)-->
+        <!--要给这个类插入一些方法：com.kuang.service.UserServiceImpl; .*类里的所有方法，(..)方法有任意参数-->
+        <aop:pointcut id="pointcut" expression="execution(* com.kuang.service.UserServiceImpl.*(..))"/>
+        <!--执行环绕; advice-ref执行方法 . pointcut-ref切入点-->
+        <!--log这个类，切入到pointcut,这个方法上-->
+        <aop:advisor advice-ref="log" pointcut-ref="pointcut"/>
+        <aop:advisor advice-ref="afterLog" pointcut-ref="pointcut"/>
+    </aop:config>
+</beans>
